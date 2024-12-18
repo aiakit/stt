@@ -4,7 +4,7 @@ query_image:
       required: true
       selector:
         config_entry:
-          integration: extended_openai_conversation
+          integration: homingai_stt
     model:
       example: gpt-4-vision-preview
       selector:
