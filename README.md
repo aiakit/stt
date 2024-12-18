@@ -1,0 +1,2 @@
+# stt
+for homeassistant
