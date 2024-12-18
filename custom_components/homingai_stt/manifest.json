@@ -1,6 +1,6 @@
 {
   "domain": "homingai_stt",
-  "name": "Extended OpenAI Conversation",
+  "name": "homingai_stt",
   "codeowners": [
     "@aiakit"
   ],
