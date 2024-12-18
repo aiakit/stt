@@ -1,6 +1,6 @@
 """Constants for the Extended OpenAI Conversation integration."""
 
-DOMAIN = "extended_openai_conversation"
+DOMAIN = "homingai_stt"
 DEFAULT_NAME = "Extended OpenAI Conversation"
 CONF_ORGANIZATION = "organization"
 CONF_BASE_URL = "base_url"
