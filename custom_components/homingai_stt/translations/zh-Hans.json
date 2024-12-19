@@ -1,0 +1,23 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "设置 HomingAI STT",
+                "description": "请输入您的 HomingAI STT 凭据",
+                "data": {
+                    "client_id": "客户端 ID",
+                    "client_secret": "客户端密钥",
+                    "url": "API 地址（可选）"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "连接失败",
+            "invalid_auth": "身份验证无效",
+            "unknown": "发生意外错误"
+        },
+        "abort": {
+            "already_configured": "账户已配置"
+        }
+    }
+}
