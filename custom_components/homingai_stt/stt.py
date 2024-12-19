@@ -23,7 +23,6 @@ class SpeechToTextEntity(stt.SpeechToTextEntity):
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry):
         """Initialize."""
-
         self.hass = hass
         self._attr_unique_id = f"{entry.entry_id}_stt"
         self._attr_name = "HomingAI STT"
@@ -62,9 +61,18 @@ class SpeechToTextEntity(stt.SpeechToTextEntity):
         """Return a list of supported channels."""
         return [stt.AudioChannels.CHANNEL_MONO]
 
+    def _normalize_language(self, language: str) -> str:
+        """标准化语言代码。"""
+        # 处理通用中文到具体变体的映射
+        if language == "zh":
+            return "zh-CN"
+        return language
+
     async def async_process_audio_stream(self, metadata: stt.SpeechMetadata, stream):
         """Process audio stream to text."""
-        if metadata.language not in self.supported_languages:
+        # 标准化语言代码
+        normalized_language = self._normalize_language(metadata.language)
+        if normalized_language not in self.supported_languages:
             raise stt.SpeechToTextError(
                 f"Language '{metadata.language}' not supported"
             )
@@ -112,32 +120,30 @@ class SpeechToTextEntity(stt.SpeechToTextEntity):
             wav_data = wav_header + audio_data
 
             async with self._session.post(
-                    "https://api.homingai.com/ha/home/stt",
-                    headers={
-                        "Authorization": f"Bearer {self._client_id}:{self._client_secret}",
-                        "Content-Type": "audio/wav",
-                    },
-                    data=wav_data,
+                "https://api.homingai.com/ha/home/stt",
+                headers={
+                    "Authorization": f"Bearer {self._client_id}:{self._client_secret}",
+                    "Content-Type": "audio/wav",
+                },
+                data=wav_data,
             ) as response:
                 if response.status != 200:
                     _LOGGER.error("API 调用失败: %s", await response.text())
-                    raise stt.SpeechToTextEntity.error_class(f"API 调用失败，状态码: {response.status}")
+                    raise stt.SpeechToTextError(f"API 调用失败，状态码: {response.status}")
 
                 result = await response.json()
                 if result.get("code") != 200:
-                    raise stt.SpeechToTextEntity.error_class(f"API 返回错误: {result.get('msg', '未知错误')}")
+                    raise stt.SpeechToTextError(f"API 返回错误: {result.get('msg', '未知错误')}")
 
-                # 更安全的数据访问方式
                 text = result.get("msg")
                 if not text:
-                    raise stt.SpeechToTextEntity.error_class("API 返回的数据中没有识别结果")
+                    raise stt.SpeechToTextError("API 返回的数据中没有识别结果")
 
-                # 使用 result 参数名而不是 text
                 return stt.SpeechResult(text, SpeechResultState.SUCCESS)
 
         except Exception as err:
             _LOGGER.error("STT 处理失败: %s", err)
-            raise stt.SpeechToTextEntity.error_class(f"STT 处理失败: {err}")
+            raise stt.SpeechToTextError(f"STT 处理失败: {err}")
 
 
 def generate_wav_header(audio_size: int, sample_rate: int, channels: int, bits_per_sample: int) -> bytes:
