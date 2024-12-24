@@ -10,8 +10,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import (
-    CONF_CLIENT_ID,
-    CONF_CLIENT_SECRET,
     SUPPORTED_LANGUAGES,
 )
 
@@ -27,8 +25,7 @@ class SpeechToTextEntity(stt.SpeechToTextEntity):
         self._attr_unique_id = f"{entry.entry_id}_stt"
         self._attr_name = "HomingAI STT"
         self._entry = entry
-        self._client_id = entry.data[CONF_CLIENT_ID]
-        self._client_secret = entry.data[CONF_CLIENT_SECRET]
+        self._access_token = entry.data.get('access_token', '')
         self._session = async_get_clientsession(hass)
 
     @property
@@ -122,7 +119,7 @@ class SpeechToTextEntity(stt.SpeechToTextEntity):
             async with self._session.post(
                 "https://api.homingai.com/ha/home/stt",
                 headers={
-                    "Authorization": f"Bearer {self._client_id}:{self._client_secret}",
+                    "Authorization": f"Bearer {self._access_token}",
                     "Content-Type": "audio/wav",
                 },
                 data=wav_data,

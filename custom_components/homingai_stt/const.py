@@ -1,11 +1,7 @@
 """Constants for HomingAI STT integration."""
 
 DOMAIN = "homingai_stt"
-DEFAULT_NAME = "HomingAI STT"
-
-# Configuration
-CONF_CLIENT_ID = "client_id"
-CONF_CLIENT_SECRET = "client_secret"
+TITLE = "HomingAI Chat"
 
 # Supported languages
 SUPPORTED_LANGUAGES = [

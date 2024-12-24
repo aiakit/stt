@@ -2,22 +2,16 @@
     "config": {
         "step": {
             "user": {
-                "title": "设置 HomingAI STT",
-                "description": "请输入您的 HomingAI STT 凭据",
-                "data": {
-                    "client_id": "客户端 ID",
-                    "client_secret": "客户端密钥",
-                    "url": "API 地址（可选）"
-                }
+                "description": "{risks}",
+                "title": "HomingAI Chat"
             }
         },
         "error": {
-            "cannot_connect": "连接失败",
-            "invalid_auth": "身份验证无效",
-            "unknown": "发生意外错误"
+            "auth_error": "获取授权码失败，请确认是否在HomingAI官网授权成功",
+            "auth_verify_failed": "授权验证失败，请重试"
         },
         "abort": {
-            "already_configured": "账户已配置"
+            "already_configured": "此账号已经配置过了"
         }
     }
 }
