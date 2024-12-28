@@ -16,7 +16,7 @@ HomingAI STT 是一个 Home Assistant 自定义组件，提供高精度的语音
 
 1. 确保已经安装了 [HACS](https://hacs.xyz/)
 2. HACS > 集成 > 右上角菜单 > Custom repositories
-3. 添加仓库：`https://github.com/your-username/stt`
+3. 添加仓库：`https://github.com/aiakit/stt`
 4. 类别选择：Integration
 5. 在 HACS 集成页面搜索 "HomingAI STT"
 6. 点击下载
@@ -34,8 +34,8 @@ HomingAI STT 是一个 Home Assistant 自定义组件，提供高精度的语音
 
 1. 在 Home Assistant 的配置页面中添加集成
 2. 搜索 "HomingAI STT"
-3. 输入您的 Client ID 和 Client Secret
-4. 完成配置
+3. 完成HomingAi的授权
+4. 点击“提交”完成配置
 
 > 提示：点击上方按钮可以快速跳转到配置页面
 
@@ -44,7 +44,7 @@ HomingAI STT 是一个 Home Assistant 自定义组件，提供高精度的语音
 - 音频格式：WAV
 - 采样率：16kHz
 - 声道：单声道
-- 语言支持：中文 (zh-CN)
+- 语言支持：中文 (zh-CN)等等
 
 ## ⚠️ 注意事项
 
