@@ -67,38 +67,6 @@ class SpeechToTextEntity(stt.SpeechToTextEntity):
 
     async def async_process_audio_stream(self, metadata: stt.SpeechMetadata, stream):
         """Process audio stream to text."""
-        # 标准化语言代码
-        normalized_language = self._normalize_language(metadata.language)
-        if normalized_language not in self.supported_languages:
-            raise stt.SpeechToTextError(
-                f"Language '{metadata.language}' not supported"
-            )
-
-        if metadata.format not in self.supported_formats:
-            raise stt.SpeechToTextError(
-                f"Format '{metadata.format}' not supported"
-            )
-
-        if metadata.codec not in self.supported_codecs:
-            raise stt.SpeechToTextError(
-                f"Codec '{metadata.codec}' not supported"
-            )
-
-        if metadata.bit_rate not in self.supported_bit_rates:
-            raise stt.SpeechToTextError(
-                f"Bit rate '{metadata.bit_rate}' not supported"
-            )
-
-        if metadata.sample_rate not in self.supported_sample_rates:
-            raise stt.SpeechToTextError(
-                f"Sample rate '{metadata.sample_rate}' not supported"
-            )
-
-        if metadata.channel not in self.supported_channels:
-            raise stt.SpeechToTextError(
-                f"Channel '{metadata.channel}' not supported"
-            )
-
         try:
             # 从异步生成器读取音频数据
             audio_chunks = []
@@ -125,22 +93,22 @@ class SpeechToTextEntity(stt.SpeechToTextEntity):
                 data=wav_data,
             ) as response:
                 if response.status != 200:
-                    _LOGGER.error("API 调用失败: %s", await response.text())
-                    raise stt.SpeechToTextError(f"API 调用失败，状态码: {response.status}")
+                    return stt.SpeechResult("服务器开小差了~", SpeechResultState.ERROR)
 
                 result = await response.json()
                 if result.get("code") != 200:
-                    raise stt.SpeechToTextError(f"API 返回错误: {result.get('msg', '未知错误')}")
+                    return stt.SpeechResult("识别失败", SpeechResultState.ERROR)
 
                 text = result.get("msg")
                 if not text:
-                    raise stt.SpeechToTextError("API 返回的数据中没有识别结果")
+                    return stt.SpeechResult("你好像没有说话哦~", SpeechResultState.ERROR)
 
                 return stt.SpeechResult(text, SpeechResultState.SUCCESS)
 
         except Exception as err:
             _LOGGER.error("STT 处理失败: %s", err)
-            raise stt.SpeechToTextError(f"STT 处理失败: {err}")
+            return stt.SpeechResult("STT 处理失败~", SpeechResultState.ERROR)
+
 
 
 def generate_wav_header(audio_size: int, sample_rate: int, channels: int, bits_per_sample: int) -> bytes:
